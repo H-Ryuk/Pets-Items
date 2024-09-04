@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+@Repository
 public interface ItemRepo extends JpaRepository<Items,Integer> {
 
     @Query("SELECT new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
