@@ -7,10 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
+<<<<<<< HEAD
 
 
 @Repository
 public interface ItemRepo extends JpaRepository<Items,Long> {
+=======
+@Repository
+public interface ItemRepo extends JpaRepository<Items,Integer> {
+>>>>>>> 8041ab8b552c16f3fbe87ace45596307f4d40032
 
     @Query("SELECT new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
             "FROM Items i JOIN i.category c where i.name like :name% ")
