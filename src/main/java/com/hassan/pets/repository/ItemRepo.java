@@ -4,10 +4,13 @@ import com.hassan.pets.DTO.ItemRecord;
 import com.hassan.pets.model.Items;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
+import org.springframework.stereotype.Repository;
 import java.util.List;
 
-public interface ItemRepo extends JpaRepository<Items,Integer> {
+
+
+@Repository
+public interface ItemRepo extends JpaRepository<Items,Long> {
 
     @Query("SELECT new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
             "FROM Items i JOIN i.category c where i.name like :name% ")
@@ -16,7 +19,7 @@ public interface ItemRepo extends JpaRepository<Items,Integer> {
 
     @Query("select new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
             "from Items i join i.category c where i.itemId = :id")
-    ItemRecord findItemCategoryDetails(int id);
+    ItemRecord findItemCategoryDetails(Long id);
 
 
     @Query("select new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +

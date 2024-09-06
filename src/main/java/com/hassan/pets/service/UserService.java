@@ -8,7 +8,6 @@ import com.hassan.pets.repository.UserRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -41,8 +40,8 @@ public class UserService {
     }
 
 
-    public UserOrderRecord getById(int id) {
-        return userRepo.findById(id)
+    public UserOrderRecord getUserOrdersById(Long userId) {
+        return userRepo.findById(userId)
                 .map(users -> {
                     List<OrderRecord> orderRecords = users.getOrdersList().stream()
                             .map(orders -> new OrderRecord(
@@ -59,7 +58,7 @@ public class UserService {
                             orderRecords
                     );
                 })
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
     }
 
 

@@ -15,6 +15,8 @@ public class UserController {
 
     private final UserService userService;
 
+
+
     public UserController(UserService userService) {
         this.userService = userService;
     }
@@ -33,8 +35,8 @@ public class UserController {
 
 
     @GetMapping("{userId}")
-    public UserOrderRecord getById(@PathVariable int userId){
-        return userService.getById(userId);
+    public UserOrderRecord getUserOrdersById(@PathVariable Long userId){
+        return userService.getUserOrdersById(userId);
     }
 
 
@@ -48,5 +50,9 @@ public class UserController {
     public Users deleteUser(@RequestBody Users user){
         return userService.deleteUser(user);
     }
+
+
+
+
 
 }

@@ -38,7 +38,7 @@ public class ItemsController {
 
 
     @GetMapping("{itemId}")
-    public ItemRecord getById(@PathVariable int itemId) {
+    public ItemRecord getById(@PathVariable Long itemId) {
         return itemService.getById(itemId);
     }
 
@@ -50,7 +50,7 @@ public class ItemsController {
 
 
     @DeleteMapping("{itemId}")
-    public void deleteItem(@PathVariable int itemId){
+    public void deleteItem(@PathVariable Long itemId){
         itemService.deleteItem(itemId);
     }
 

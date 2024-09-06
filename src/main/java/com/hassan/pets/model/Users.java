@@ -2,6 +2,7 @@ package com.hassan.pets.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -12,11 +13,12 @@ import java.util.List;
 @Data
 @Entity
 @Component
+@Scope("prototype")
 public class Users implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userId;
+    private Long userId;
     private String username;
     private String password;
     private String email;

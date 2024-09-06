@@ -6,9 +6,9 @@ import com.hassan.pets.model.Items;
 import com.hassan.pets.repository.CategoryRepo;
 import com.hassan.pets.repository.ItemRepo;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
-import java.util.Optional;
+
+
 
 @Service
 public class ItemService {
@@ -25,10 +25,16 @@ public class ItemService {
 
     public ItemRecord addItem(Items item) {
 
-        item.setCategory(
-                categoryRepo.findByName(item.getCategory().getName())
-                        .orElse(item.getCategory())
-        );
+
+        Categories exsitingCategory = categoryRepo.findByName(item.getCategory().getName());
+
+        if (exsitingCategory == null) {
+            item.setCategory(categoryRepo.save(item.getCategory()));
+        } else {
+            item.setCategory(exsitingCategory);
+        }
+
+
         itemRepo.save(item);
 
         return new ItemRecord(
@@ -53,12 +59,12 @@ public class ItemService {
     }
 
 
-    public ItemRecord getById(int itemId) {
+    public ItemRecord getById(Long itemId) {
         return itemRepo.findItemCategoryDetails(itemId);
     }
 
 
-    public void deleteItem(int itemId) {
+    public void deleteItem(Long itemId) {
         itemRepo.deleteById(itemId);
     }
 
@@ -67,17 +73,17 @@ public class ItemService {
         itemRepo.save(newItem);
         newItem.setCategory(
                 categoryRepo.findById(newItem.getCategory().getCategoryId())
-                .orElse(null)
+                        .orElse(null)
         );
 
         return new ItemRecord(
-          newItem.getItemId(),
-          newItem.getName(),
-          newItem.getPrice(),
-          newItem.getStock(),
-          newItem.getImageUrl(),
-          newItem.getCategory().getName(),
-          newItem.getCategory().getDescription()
+                newItem.getItemId(),
+                newItem.getName(),
+                newItem.getPrice(),
+                newItem.getStock(),
+                newItem.getImageUrl(),
+                newItem.getCategory().getName(),
+                newItem.getCategory().getDescription()
         );
     }
 
