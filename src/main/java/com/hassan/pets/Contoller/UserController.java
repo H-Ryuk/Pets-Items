@@ -2,8 +2,11 @@ package com.hassan.pets.Contoller;
 
 import com.hassan.pets.DTO.UserOrderRecord;
 import com.hassan.pets.DTO.UserRecord;
+import com.hassan.pets.exception.TargetNotFoundException;
 import com.hassan.pets.model.Users;
 import com.hassan.pets.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,43 +19,46 @@ public class UserController {
     private final UserService userService;
 
 
-
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
 
     @PostMapping
-    public Users addUser(@RequestBody Users user){
+    public Users addUser(@RequestBody Users user) {
         return userService.addUser(user);
     }
 
 
     @GetMapping
-    public List<UserRecord> getAll(){
+    public List<UserRecord> getAll() {
         return userService.getAll();
     }
 
 
     @GetMapping("{userId}")
-    public UserOrderRecord getUserOrdersById(@PathVariable Long userId){
-        return userService.getUserOrdersById(userId);
+    public ResponseEntity<UserOrderRecord> getUserOrdersById(@PathVariable Long userId) {
+        try {
+            UserOrderRecord user = userService.getUserOrdersById(userId);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+
+        } catch (TargetNotFoundException ex) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+
     }
 
 
     @PutMapping
-    public void updateUser(@RequestBody Users user){
+    public void updateUser(@RequestBody Users user) {
         userService.updateUser(user);
     }
 
 
     @DeleteMapping
-    public Users deleteUser(@RequestBody Users user){
+    public Users deleteUser(@RequestBody Users user) {
         return userService.deleteUser(user);
     }
-
-
-
 
 
 }

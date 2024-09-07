@@ -2,10 +2,13 @@ package com.hassan.pets.Contoller;
 
 import com.hassan.pets.DTO.CategoryRecord;
 import com.hassan.pets.DTO.ItemRecord;
+import com.hassan.pets.exception.TargetNotFoundException;
 import com.hassan.pets.model.Categories;
 import com.hassan.pets.model.Items;
 import com.hassan.pets.service.CategoryService;
 import com.hassan.pets.service.ItemService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,8 +41,14 @@ public class ItemsController {
 
 
     @GetMapping("{itemId}")
-    public ItemRecord getById(@PathVariable Long itemId) {
-        return itemService.getById(itemId);
+    public ResponseEntity<?> getById(@PathVariable Long itemId) {
+        try {
+            ItemRecord itemsRecord = itemService.getById(itemId);
+            return new ResponseEntity<>(itemsRecord, HttpStatus.OK);
+
+        } catch (TargetNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 
@@ -50,35 +59,29 @@ public class ItemsController {
 
 
     @DeleteMapping("{itemId}")
-    public void deleteItem(@PathVariable Long itemId){
+    public void deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
     }
 
 
     @PutMapping
-    public ItemRecord updateItem(@RequestBody Items item){
+    public ItemRecord updateItem(@RequestBody Items item) {
         return itemService.updateItem(item);
     }
-
-
 
 
     /////////////// Categories methods ////////////////
 
     @GetMapping("categories")
-    public List<CategoryRecord> getAllCategories(){
+    public List<CategoryRecord> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
 
-
     @PutMapping("categories")
-    public void updateCategory(@RequestBody Categories category){
+    public void updateCategory(@RequestBody Categories category) {
         categoryService.updateCategory(category);
     }
-
-
-
 
 
 }
