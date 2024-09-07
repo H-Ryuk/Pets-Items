@@ -37,13 +37,13 @@ public class UserController {
 
 
     @GetMapping("{userId}")
-    public ResponseEntity<UserOrderRecord> getUserOrdersById(@PathVariable Long userId) {
+    public ResponseEntity<?> getUserOrdersById(@PathVariable Long userId) {
         try {
             UserOrderRecord user = userService.getUserOrdersById(userId);
             return new ResponseEntity<>(user, HttpStatus.OK);
 
         } catch (TargetNotFoundException ex) {
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
         }
 
     }
