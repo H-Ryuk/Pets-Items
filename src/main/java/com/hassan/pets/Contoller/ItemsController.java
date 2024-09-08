@@ -1,12 +1,14 @@
 package com.hassan.pets.Contoller;
 
-import com.hassan.pets.DTO.CategoryRecord;
-import com.hassan.pets.DTO.ItemRecord;
-import com.hassan.pets.exception.TargetNotFoundException;
-import com.hassan.pets.model.Categories;
-import com.hassan.pets.model.Items;
-import com.hassan.pets.service.CategoryService;
-import com.hassan.pets.service.ItemService;
+import com.hassan.pets.Records.CategoryRecord;
+import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Model.Categories;
+import com.hassan.pets.Model.Items;
+import com.hassan.pets.Service.CategoryService;
+import com.hassan.pets.Service.ItemService;
+import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +31,11 @@ public class ItemsController {
 
 
     @PostMapping
-    public ItemRecord addItem(@RequestBody Items item) {
-        return itemService.addItem(item);
+    public ResponseEntity<String> addItem(@RequestBody @Valid ItemRecord itemRecord) {
+        ItemRecord item = itemService.addItem(itemRecord);
+        return new
+                ResponseEntity<>("Item " + item.name() + " successfully created with ID : " + item.itemId(),
+                HttpStatus.CREATED);
     }
 
 
@@ -65,8 +70,8 @@ public class ItemsController {
 
 
     @PutMapping
-    public ItemRecord updateItem(@RequestBody Items item) {
-        return itemService.updateItem(item);
+    public ItemRecord updateItem(@RequestBody ItemRecord itemRecord) {
+        return itemService.updateItem(itemRecord);
     }
 
 

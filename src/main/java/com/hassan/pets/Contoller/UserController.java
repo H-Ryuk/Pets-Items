@@ -1,10 +1,11 @@
 package com.hassan.pets.Contoller;
 
-import com.hassan.pets.DTO.UserOrderRecord;
-import com.hassan.pets.DTO.UserRecord;
-import com.hassan.pets.exception.TargetNotFoundException;
-import com.hassan.pets.model.Users;
-import com.hassan.pets.service.UserService;
+import com.hassan.pets.Records.UserOrderRecord;
+import com.hassan.pets.Records.UserRecord;
+import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Model.Users;
+import com.hassan.pets.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,11 @@ public class UserController {
 
 
     @PostMapping
-    public Users addUser(@RequestBody Users user) {
-        return userService.addUser(user);
+    public ResponseEntity<String> addUser(@RequestBody @Valid UserRecord userRecord) {
+        Users user = userService.addUser(userRecord);
+        return new
+                ResponseEntity<>("User " + user.getUsername() + " created successfully with ID: " + user.getUserId(),
+                HttpStatus.CREATED);
     }
 
 
@@ -50,8 +54,13 @@ public class UserController {
 
 
     @PutMapping
-    public void updateUser(@RequestBody Users user) {
-        userService.updateUser(user);
+    public ResponseEntity<?> updateUser(@RequestBody Users user) {
+        try {
+            userService.updateUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (TargetNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 

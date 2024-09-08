@@ -1,7 +1,7 @@
 package com.hassan.pets.Contoller;
 
-import com.hassan.pets.DTO.userAndItemsRecord;
-import com.hassan.pets.service.WishListService;
+import com.hassan.pets.Records.userAndItemsRecord;
+import com.hassan.pets.Service.WishListService;
 import org.springframework.web.bind.annotation.*;
 
 
