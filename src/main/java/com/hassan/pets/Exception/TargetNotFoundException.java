@@ -1,9 +1,9 @@
-package com.hassan.pets.exception;
+package com.hassan.pets.Exception;
 
 public class TargetNotFoundException extends RuntimeException{
 
     public TargetNotFoundException(Long targetId){
-        super("Not found with this id : " + targetId);
+        super("Target not found with this id : " + targetId);
     }
 
 }
