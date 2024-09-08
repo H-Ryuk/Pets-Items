@@ -1,13 +1,11 @@
-package com.hassan.pets.repository;
+package com.hassan.pets.Repository;
 
-import com.hassan.pets.model.WishLists;
+import com.hassan.pets.Model.WishLists;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface WishListRepo extends JpaRepository<WishLists,Long> {

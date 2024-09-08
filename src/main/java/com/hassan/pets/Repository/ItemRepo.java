@@ -1,29 +1,32 @@
-package com.hassan.pets.repository;
+package com.hassan.pets.Repository;
 
-import com.hassan.pets.DTO.ItemRecord;
-import com.hassan.pets.model.Items;
+import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Model.Items;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
-public interface ItemRepo extends JpaRepository<Items,Integer> {
+public interface ItemRepo extends JpaRepository<Items,Long> {
 
 
-    @Query("SELECT new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
-            "FROM Items i JOIN i.category c where i.name like :name% ")
+    @Query("SELECT new com.hassan.pets.Records.ItemRecord" +
+            "(i.itemId, i.name, i.price, i.description, i.stock,i.imageUrl, i.category) " +
+            "FROM Items i where i.name like :name% ")
     List<ItemRecord> findItemCategoryDetails(String name);
 
 
-    @Query("select new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
-            "from Items i join i.category c where i.itemId = :id")
-    ItemRecord findItemCategoryDetails(Long id);
+    @Query("select new com.hassan.pets.Records.ItemRecord" +
+            "(i.itemId, i.name, i.price, i.description, i.stock,i.imageUrl, i.category) " +
+            "from Items i  where i.itemId = :id")
+    Optional<ItemRecord> findItemCategoryDetails(Long id);
 
 
-    @Query("select new com.hassan.pets.DTO.ItemRecord(i.itemId, i.name, i.price, i.stock,i.imageUrl, c.name, c.description) " +
-            "from Items i join i.category c")
+    @Query("select new com.hassan.pets.Records.ItemRecord" +
+            "(i.itemId, i.name, i.price, i.description, i.stock,i.imageUrl, i.category) from Items i")
     List<ItemRecord> findItemCategoryDetails();
 
 }
