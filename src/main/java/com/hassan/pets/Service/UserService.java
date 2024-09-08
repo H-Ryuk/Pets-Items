@@ -1,10 +1,11 @@
-package com.hassan.pets.service;
+package com.hassan.pets.Service;
 
-import com.hassan.pets.DTO.OrderRecord;
-import com.hassan.pets.DTO.UserOrderRecord;
-import com.hassan.pets.DTO.UserRecord;
-import com.hassan.pets.model.Users;
-import com.hassan.pets.repository.UserRepo;
+import com.hassan.pets.Records.OrderRecord;
+import com.hassan.pets.Records.UserOrderRecord;
+import com.hassan.pets.Records.UserRecord;
+import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Model.Users;
+import com.hassan.pets.Repository.UserRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,8 @@ public class UserService {
     }
 
 
-    public Users addUser(Users user) {
-        return userRepo.save(user);
+    public Users addUser(UserRecord userRecord) {
+        return userRepo.save(convertUserRecordToUser(userRecord));
     }
 
 
@@ -34,7 +35,8 @@ public class UserService {
                         users.getPassword(),
                         users.getEmail(),
                         users.getAddress(),
-                        users.getPhoneNumber()
+                        users.getPhoneNumber(),
+                        users.getRole()
                 ))
                 .toList();
     }
@@ -58,15 +60,13 @@ public class UserService {
                             orderRecords
                     );
                 })
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new TargetNotFoundException(userId));
     }
-
-
 
 
     public void updateUser(Users user) {
         userRepo.findById(user.getUserId())
-                .ifPresent(users -> {
+                .ifPresentOrElse(users -> {
                     users.setAddress(user.getAddress());
                     users.setEmail(user.getEmail());
                     users.setPassword(user.getPassword());
@@ -75,15 +75,29 @@ public class UserService {
                     users.setUsername(user.getUsername());
 
                     userRepo.save(users);
+
+                }, () -> {
+                    throw new TargetNotFoundException(user.getUserId());
                 });
     }
-
-
 
 
     public Users deleteUser(Users user) {
         userRepo.delete(user);
         return user;
+    }
+
+
+    public Users convertUserRecordToUser(UserRecord userRecord) {
+        return new Users(
+                userRecord.userId(),
+                userRecord.username(),
+                userRecord.password(),
+                userRecord.email(),
+                userRecord.address(),
+                userRecord.phoneNumber(),
+                userRecord.role()
+        );
     }
 
 

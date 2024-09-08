@@ -1,13 +1,16 @@
-package com.hassan.pets.service;
+package com.hassan.pets.Service;
 
-import com.hassan.pets.DTO.ItemRecord;
-import com.hassan.pets.model.Categories;
-import com.hassan.pets.model.Items;
-import com.hassan.pets.repository.CategoryRepo;
-import com.hassan.pets.repository.ItemRepo;
+import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Model.Categories;
+import com.hassan.pets.Model.Items;
+import com.hassan.pets.Repository.CategoryRepo;
+import com.hassan.pets.Repository.ItemRepo;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 
 @Service
@@ -23,30 +26,28 @@ public class ItemService {
     }
 
 
-    public ItemRecord addItem(Items item) {
+    public ItemRecord addItem(ItemRecord itemRecord) {
+        Items item = convertItemRecordToItem(itemRecord);
 
-
-        Categories exsitingCategory = categoryRepo.findByName(item.getCategory().getName());
-
-        if (exsitingCategory == null) {
-            item.setCategory(categoryRepo.save(item.getCategory()));
-        } else {
-            item.setCategory(exsitingCategory);
-        }
-
-
-        itemRepo.save(item);
-
-        return new ItemRecord(
-                item.getItemId(),
-                item.getName(),
-                item.getPrice(),
-                item.getStock(),
-                item.getImageUrl(),
-                item.getCategory().getName(),
-                item.getCategory().getDescription()
+        categoryRepo.findByName(item.getCategory().getName())
+                .ifPresentOrElse(
+                        item::setCategory,
+                () -> item.setCategory(categoryRepo.save(item.getCategory()))
         );
+
+        return Optional.of(itemRepo.save(item))
+                .map(itemOptional -> new ItemRecord(
+                        itemOptional.getItemId(),
+                        itemOptional.getName(),
+                        itemOptional.getPrice(),
+                        itemOptional.getDescription(),
+                        itemOptional.getStock(),
+                        itemOptional.getImageUrl(),
+                        itemOptional.getCategory()
+                )).get();
     }
+
+
 
 
     public List<ItemRecord> getAll() {
@@ -60,7 +61,8 @@ public class ItemService {
 
 
     public ItemRecord getById(Long itemId) {
-        return itemRepo.findItemCategoryDetails(itemId);
+        return itemRepo.findItemCategoryDetails(itemId)
+                .orElseThrow(() -> new TargetNotFoundException(itemId));
     }
 
 
@@ -69,21 +71,26 @@ public class ItemService {
     }
 
 
-    public ItemRecord updateItem(Items newItem) {
+    public ItemRecord updateItem(ItemRecord itemRecord) {
+        Items newItem = convertItemRecordToItem(itemRecord);
         itemRepo.save(newItem);
         newItem.setCategory(
                 categoryRepo.findById(newItem.getCategory().getCategoryId())
                         .orElse(null)
         );
+        return itemRecord;
+    }
 
-        return new ItemRecord(
-                newItem.getItemId(),
-                newItem.getName(),
-                newItem.getPrice(),
-                newItem.getStock(),
-                newItem.getImageUrl(),
-                newItem.getCategory().getName(),
-                newItem.getCategory().getDescription()
+
+    public Items convertItemRecordToItem(ItemRecord itemRecord) {
+        return new Items(
+                itemRecord.itemId(),
+                itemRecord.name(),
+                itemRecord.description(),
+                itemRecord.price(),
+                itemRecord.stock(),
+                itemRecord.imageUrl(),
+                itemRecord.category()
         );
     }
 

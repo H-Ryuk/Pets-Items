@@ -1,8 +1,8 @@
-package com.hassan.pets.service;
+package com.hassan.pets.Service;
 
-import com.hassan.pets.DTO.userAndItemsRecord;
-import com.hassan.pets.model.WishLists;
-import com.hassan.pets.repository.WishListRepo;
+import com.hassan.pets.Records.userAndItemsRecord;
+import com.hassan.pets.Model.WishLists;
+import com.hassan.pets.Repository.WishListRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
