@@ -1,4 +1,4 @@
-package com.hassan.pets.model;
+package com.hassan.pets.Model;
 
 
 import jakarta.persistence.*;

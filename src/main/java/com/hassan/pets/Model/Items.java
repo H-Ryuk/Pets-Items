@@ -1,7 +1,9 @@
-package com.hassan.pets.model;
+package com.hassan.pets.Model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -9,6 +11,8 @@ import java.math.BigDecimal;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Component
 public class Items implements Serializable {
@@ -29,6 +33,7 @@ public class Items implements Serializable {
     @ManyToOne
     @JoinColumn(name = "category_fk")
     private Categories category;
+
 
 
 }
