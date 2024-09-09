@@ -16,7 +16,6 @@ import java.util.List;
 @RequestMapping("api/users")
 public class UserController {
 
-
     private final UserService userService;
 
 
@@ -64,9 +63,14 @@ public class UserController {
     }
 
 
-    @DeleteMapping
-    public Users deleteUser(@RequestBody Users user) {
-        return userService.deleteUser(user);
+    @DeleteMapping("{userId}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
+        try {
+            String status = userService.deleteUser(userId);
+            return new ResponseEntity<>(status, HttpStatus.OK);
+        } catch (TargetNotFoundException ex) {
+            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 

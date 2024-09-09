@@ -2,13 +2,11 @@ package com.hassan.pets.Contoller;
 
 import com.hassan.pets.Records.CategoryRecord;
 import com.hassan.pets.Records.ItemRecord;
-import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Model.Categories;
-import com.hassan.pets.Model.Items;
 import com.hassan.pets.Service.CategoryService;
 import com.hassan.pets.Service.ItemService;
 import jakarta.validation.Valid;
-import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,15 +14,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/items")
-public class ItemsController {
+@RequestMapping("api/item")
+public class ItemController {
 
 
     private final ItemService itemService;
     private final CategoryService categoryService;
 
 
-    public ItemsController(ItemService itemService, CategoryService categoryService) {
+    public ItemController(ItemService itemService, CategoryService categoryService) {
         this.itemService = itemService;
         this.categoryService = categoryService;
     }
@@ -43,6 +41,20 @@ public class ItemsController {
     public List<ItemRecord> getAll() {
         return itemService.getAll();
     }
+
+
+
+    ////// Testing pagination  ///////////////////
+    @GetMapping("pagination")
+    public ResponseEntity<Page<ItemRecord>> getAll(
+            @RequestParam int page,
+            @RequestParam int size) {
+        Page<ItemRecord> items = itemService.getAll(page, size);
+        return new ResponseEntity<>(items, HttpStatus.OK);
+    }
+    ///////////////////////////////////////////////
+
+
 
 
     @GetMapping("{itemId}")
@@ -68,10 +80,12 @@ public class ItemsController {
 
 
     @PutMapping
-    public ResponseEntity<ItemRecord> updateItem(@RequestBody ItemRecord itemRecord) {
+    public ResponseEntity<ItemRecord> updateItem(@RequestBody @Valid ItemRecord itemRecord) {
         ItemRecord item = itemService.updateItem(itemRecord);
-        return new ResponseEntity<>(item, HttpStatus.CREATED);
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
+
+
 
 
     /////////////// Categories methods ////////////////
@@ -82,11 +96,11 @@ public class ItemsController {
     }
 
 
-    @PutMapping("category")
-    public ResponseEntity<String> updateCategory(@RequestBody Categories category) {
-        categoryService.updateCategory(category);
+    @PutMapping("category/{categoryId}")
+    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @RequestBody @Valid CategoryRecord categoryRecord) {
+        categoryService.updateCategory(categoryId, categoryRecord);
         return new
-                ResponseEntity<>("Category with ID: " + category.getCategoryId() + " get successfully updated",
+                ResponseEntity<>("Category with ID: " + categoryId + " get successfully updated",
                 HttpStatus.OK);
     }
 
