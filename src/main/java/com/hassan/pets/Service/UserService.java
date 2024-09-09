@@ -9,11 +9,14 @@ import com.hassan.pets.Repository.UserRepo;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class UserService {
 
 
+    private final String targetName = "User";
     private final UserRepo userRepo;
 
 
@@ -60,7 +63,7 @@ public class UserService {
                             orderRecords
                     );
                 })
-                .orElseThrow(() -> new TargetNotFoundException(userId));
+                .orElseThrow(() -> new TargetNotFoundException(targetName, userId));
     }
 
 
@@ -77,14 +80,21 @@ public class UserService {
                     userRepo.save(users);
 
                 }, () -> {
-                    throw new TargetNotFoundException(user.getUserId());
+                    throw new TargetNotFoundException(targetName, user.getUserId());
                 });
     }
 
 
-    public Users deleteUser(Users user) {
-        userRepo.delete(user);
-        return user;
+    public String deleteUser(Long userId) {
+
+        Optional<Users> user = userRepo.findById(userId);
+        user.ifPresentOrElse(userRepo::delete,
+                () -> {
+                    throw new TargetNotFoundException(targetName, userId);
+                });
+
+        return user.map(users -> "User "+ users.getUsername() + " get successfully deleted")
+                .orElse("User not found and thus could not be deleted");
     }
 
 

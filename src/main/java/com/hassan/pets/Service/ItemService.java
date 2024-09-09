@@ -1,21 +1,27 @@
 package com.hassan.pets.Service;
 
+import com.hassan.pets.Exception.EmptyFieldException;
 import com.hassan.pets.Records.ItemRecord;
 import com.hassan.pets.Exception.TargetNotFoundException;
-import com.hassan.pets.Model.Categories;
 import com.hassan.pets.Model.Items;
 import com.hassan.pets.Repository.CategoryRepo;
 import com.hassan.pets.Repository.ItemRepo;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
 @Service
 public class ItemService {
 
+
+    private final String targetName = "Item";
+    private final String fieldName = "Category Name";
 
     private final ItemRepo itemRepo;
     private final CategoryRepo categoryRepo;
@@ -32,8 +38,8 @@ public class ItemService {
         categoryRepo.findByName(item.getCategory().getName())
                 .ifPresentOrElse(
                         item::setCategory,
-                () -> item.setCategory(categoryRepo.save(item.getCategory()))
-        );
+                        () -> item.setCategory(categoryRepo.save(item.getCategory()))
+                );
 
         return Optional.of(itemRepo.save(item))
                 .map(itemOptional -> new ItemRecord(
@@ -48,38 +54,65 @@ public class ItemService {
     }
 
 
-
-
     public List<ItemRecord> getAll() {
         return itemRepo.findItemCategoryDetails();
     }
 
 
-    public List<ItemRecord> getByName(String name) {
-        return itemRepo.findItemCategoryDetails(name);
+    public Page<ItemRecord> getAll(int page ,int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return itemRepo.findItemCategoryDetails(pageable);
     }
+
+
+
+    public List<ItemRecord> getByName(String name) {
+        List<ItemRecord> itemRecordList = itemRepo.findItemCategoryDetails(name);
+        if (itemRecordList.isEmpty()) {
+            throw new TargetNotFoundException(name);
+        }
+        return itemRecordList;
+    }
+
+
 
 
     public ItemRecord getById(Long itemId) {
         return itemRepo.findItemCategoryDetails(itemId)
-                .orElseThrow(() -> new TargetNotFoundException(itemId));
+                .orElseThrow(() -> new TargetNotFoundException(targetName, itemId));
     }
+
+
 
 
     public void deleteItem(Long itemId) {
-        itemRepo.deleteById(itemId);
+        itemRepo.findById(itemId)
+                .ifPresentOrElse(itemRepo::delete,
+                        () -> {
+                            throw new TargetNotFoundException(targetName, itemId);
+                        });
     }
+
+
 
 
     public ItemRecord updateItem(ItemRecord itemRecord) {
         Items newItem = convertItemRecordToItem(itemRecord);
+
+        categoryRepo.findByName(newItem.getCategory().getName())
+                .ifPresentOrElse(newItem::setCategory,
+                        () -> {
+                            if (itemRecord.category().getName() == null)
+                                throw new EmptyFieldException(fieldName);
+                            else
+                                categoryRepo.save(itemRecord.category());
+                        });
+
         itemRepo.save(newItem);
-        newItem.setCategory(
-                categoryRepo.findById(newItem.getCategory().getCategoryId())
-                        .orElse(null)
-        );
         return itemRecord;
     }
+
+
 
 
     public Items convertItemRecordToItem(ItemRecord itemRecord) {
@@ -93,6 +126,7 @@ public class ItemService {
                 itemRecord.category()
         );
     }
+
 
 
 }
