@@ -41,36 +41,22 @@ public class UserController {
 
     @GetMapping("{userId}")
     public ResponseEntity<?> getUserOrdersById(@PathVariable Long userId) {
-        try {
-            UserOrderRecord user = userService.getUserOrdersById(userId);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-
-        } catch (TargetNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
-
+        UserOrderRecord user = userService.getUserOrdersById(userId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
     @PutMapping
     public ResponseEntity<?> updateUser(@RequestBody Users user) {
-        try {
-            userService.updateUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        } catch (TargetNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        userService.updateUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 
     @DeleteMapping("{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
-        try {
-            String status = userService.deleteUser(userId);
-            return new ResponseEntity<>(status, HttpStatus.OK);
-        } catch (TargetNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
+        String status = userService.deleteUser(userId);
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
 
