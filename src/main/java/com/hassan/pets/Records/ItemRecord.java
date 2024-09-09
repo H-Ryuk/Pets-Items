@@ -23,6 +23,6 @@ public record ItemRecord
 
          byte[] imageUrl,
 
-         @NotNull(message = "every item should have one category")
+         @NotNull(message = "item category shouldn't be null")
          Categories category) {
 }
