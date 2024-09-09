@@ -47,45 +47,47 @@ public class ItemsController {
 
     @GetMapping("{itemId}")
     public ResponseEntity<?> getById(@PathVariable Long itemId) {
-        try {
-            ItemRecord itemsRecord = itemService.getById(itemId);
-            return new ResponseEntity<>(itemsRecord, HttpStatus.OK);
+        ItemRecord itemsRecord = itemService.getById(itemId);
+        return new ResponseEntity<>(itemsRecord, HttpStatus.OK);
 
-        } catch (TargetNotFoundException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
-        }
     }
 
 
-    @GetMapping("name/{ItemName}")
-    public List<ItemRecord> getByName(@PathVariable String ItemName) {
-        return itemService.getByName(ItemName);
+    @GetMapping("name/{itemName}")
+    public ResponseEntity<List<ItemRecord>> getByName(@PathVariable String itemName) {
+        List<ItemRecord> listItem = itemService.getByName(itemName);
+        return new ResponseEntity<>(listItem, HttpStatus.OK);
     }
 
 
     @DeleteMapping("{itemId}")
-    public void deleteItem(@PathVariable Long itemId) {
+    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 
 
     @PutMapping
-    public ItemRecord updateItem(@RequestBody ItemRecord itemRecord) {
-        return itemService.updateItem(itemRecord);
+    public ResponseEntity<ItemRecord> updateItem(@RequestBody ItemRecord itemRecord) {
+        ItemRecord item = itemService.updateItem(itemRecord);
+        return new ResponseEntity<>(item, HttpStatus.CREATED);
     }
 
 
     /////////////// Categories methods ////////////////
 
-    @GetMapping("categories")
+    @GetMapping("category")
     public List<CategoryRecord> getAllCategories() {
         return categoryService.getAllCategories();
     }
 
 
-    @PutMapping("categories")
-    public void updateCategory(@RequestBody Categories category) {
+    @PutMapping("category")
+    public ResponseEntity<String> updateCategory(@RequestBody Categories category) {
         categoryService.updateCategory(category);
+        return new
+                ResponseEntity<>("Category with ID: " + category.getCategoryId() + " get successfully updated",
+                HttpStatus.OK);
     }
 
 

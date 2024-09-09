@@ -16,21 +16,22 @@ public class TargetNotFoundAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(TargetNotFoundAspect.class);
 
 
-
-    @Around("execution(* com.hassan.pets.service.*.*(..))")
-    public Object handleTargetNotFound(ProceedingJoinPoint jp) throws Throwable {
-        Object result = jp.proceed();
-
-        Long targetId = (Long) jp.getArgs()[0];
-
-        if (result == null){
-           LOGGER.error("No Target found with id : " + targetId);
-           throw new TargetNotFoundException(targetId);
-        }
-        return result;
-    }
-
-
+//    @Around("execution(* com.hassan.pets.service.ItemService.*(..))")
+//    public Object handleTargetNotFound(ProceedingJoinPoint jp) throws Throwable {
+//        try {
+//            Object result = jp.proceed();
+//            if (result == null) {
+//                Long targetId = (Long) jp.getArgs()[0];  // Assuming the ID is the first argument
+//                LOGGER.error("Target not found with id: " + targetId);
+//                throw new TargetNotFoundException("test", targetId);
+//            }
+//            return result; // Return the result if not null
+//        } catch (TargetNotFoundException ex) {
+//            // Log the exception if necessary
+//            LOGGER.error("Caught TargetNotFoundException: " + ex.getMessage());
+//            throw ex; // Rethrow the exception to propagate it
+//        }
+//    }
 
 
 
