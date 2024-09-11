@@ -1,8 +1,7 @@
-package com.hassan.pets.Contoller;
+package com.hassan.pets.Controller;
 
 import com.hassan.pets.Records.CategoryRecord;
 import com.hassan.pets.Records.ItemRecord;
-import com.hassan.pets.Model.Categories;
 import com.hassan.pets.Service.CategoryService;
 import com.hassan.pets.Service.ItemService;
 import jakarta.validation.Valid;

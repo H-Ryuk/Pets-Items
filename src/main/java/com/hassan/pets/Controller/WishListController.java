@@ -1,4 +1,4 @@
-package com.hassan.pets.Contoller;
+package com.hassan.pets.Controller;
 
 import com.hassan.pets.Records.userAndItemsRecord;
 import com.hassan.pets.Service.WishListService;
