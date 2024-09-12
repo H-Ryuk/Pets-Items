@@ -1,10 +1,16 @@
 package com.hassan.pets.Service;
 
+import com.hassan.pets.Exception.RemovingItemFailedException;
+import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Model.Items;
+import com.hassan.pets.Records.ItemRecord;
 import com.hassan.pets.Records.userAndItemsRecord;
 import com.hassan.pets.Model.WishLists;
 import com.hassan.pets.Repository.WishListRepo;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -18,28 +24,50 @@ public class WishListService {
     }
 
 
-
-
-
     public void addItemToWishList(userAndItemsRecord userAndItemsRecord) {
-        WishLists wishListsExist =
-                wishListRepo.findByUserId(userAndItemsRecord.user().getUserId());
+        wishListRepo.findByUserId(userAndItemsRecord.user().getUserId())
+                .ifPresentOrElse(existingWishLists -> {
+                            existingWishLists.getItemsList().addAll(userAndItemsRecord.itemsList());
+                            existingWishLists.setItemsList(existingWishLists.getItemsList());
+                            existingWishLists.setUsers(userAndItemsRecord.user());
+                            wishListRepo.save(existingWishLists);
+                        },
+                        () -> {
+                            WishLists newWishLists = new WishLists();
+                            newWishLists.setItemsList(userAndItemsRecord.itemsList());
+                            newWishLists.setUsers(userAndItemsRecord.user());
+                            wishListRepo.save(newWishLists);
+                        });
 
-        if (wishListsExist != null) {
-            wishListsExist.getItemsList().addAll(userAndItemsRecord.itemsList());
-            wishListsExist.setItemsList(wishListsExist.getItemsList());
-            wishListsExist.setUsers(userAndItemsRecord.user());
-            wishListRepo.save(wishListsExist);
-        } else {
-            WishLists wishLists = new WishLists();
-            wishLists.setItemsList(userAndItemsRecord.itemsList());
-            wishLists.setUsers(userAndItemsRecord.user());
-            wishListRepo.save(wishLists);
-        }
     }
 
 
     public void removeFromWishlist(Long wishlistId, Long itemId) {
-        wishListRepo.removeFromWishlist(wishlistId, itemId);
+        int row = wishListRepo.removeFromWishlist(wishlistId, itemId);
+        if (row == 0) {
+            throw new RemovingItemFailedException(itemId);
+        }
     }
+
+
+    public List<ItemRecord> getItemsFromWishListByUserId(Long userId){
+         return wishListRepo.getItemsFromWishListByUserId(userId)
+                 .orElseThrow(() -> new TargetNotFoundException("User", userId))
+                 .getItemsList()
+                 .stream()
+                 .map(w -> new ItemRecord(
+                         w.getItemId(),
+                         w.getName(),
+                         w.getPrice(),
+                         w.getDescription(),
+                         w.getStock(),
+                         w.getImageUrl(),
+                         w.getCategory()
+                 )).toList();
+    }
+
+
+
+
+
 }
