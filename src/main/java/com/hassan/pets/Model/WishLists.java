@@ -2,7 +2,9 @@ package com.hassan.pets.Model;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -10,6 +12,8 @@ import java.util.List;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Component
 public class WishLists implements Serializable {

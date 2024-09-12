@@ -8,7 +8,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -17,6 +19,8 @@ import java.util.List;
 
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Component
 public class Carts implements Serializable {
