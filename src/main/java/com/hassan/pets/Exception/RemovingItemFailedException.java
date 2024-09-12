@@ -5,4 +5,9 @@ public class RemovingItemFailedException extends RuntimeException{
     public RemovingItemFailedException(Long itemId, Long cartId) {
         super("Removing item with ID: " + itemId + " from cart with ID: "  + cartId + " failed");
     }
+
+
+    public RemovingItemFailedException(Long itemId) {
+        super("Removing item with ID: " + itemId + " from wishList failed");
+    }
 }

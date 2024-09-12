@@ -31,7 +31,7 @@ public class ItemController {
     public ResponseEntity<String> addItem(@RequestBody @Valid ItemRecord itemRecord) {
         ItemRecord item = itemService.addItem(itemRecord);
         return new
-                ResponseEntity<>("Item " + item.name() + " successfully created with ID : " + item.itemId(),
+                ResponseEntity<>("The item " + item.name() + " was created successfully with ID : " + item.itemId(),
                 HttpStatus.CREATED);
     }
 
@@ -72,9 +72,9 @@ public class ItemController {
 
 
     @DeleteMapping("{itemId}")
-    public ResponseEntity<Void> deleteItem(@PathVariable Long itemId) {
+    public ResponseEntity<String> deleteItem(@PathVariable Long itemId) {
         itemService.deleteItem(itemId);
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("The item has been successfully removed", HttpStatus.NO_CONTENT);
     }
 
 
