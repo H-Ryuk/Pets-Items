@@ -28,7 +28,7 @@ public class WishLists implements Serializable {
     private Users users;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "wishList_Items",
             joinColumns = @JoinColumn(name = "wish_fk"),
