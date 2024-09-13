@@ -2,11 +2,13 @@ package com.hassan.pets.Service;
 
 import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Records.OrderDetailsRecord;
-import com.hassan.pets.Records.userAndItemsRecord;
+import com.hassan.pets.Records.UserAndItemsRecord;
 import com.hassan.pets.Model.*;
 import com.hassan.pets.Repository.CartRepo;
 import com.hassan.pets.Repository.OrderDetailsRepo;
 import com.hassan.pets.Repository.OrdersRepo;
+import com.hassan.pets.Repository.WishListRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +16,7 @@ import java.util.List;
 
 
 @Service
+@Transactional
 public class OrderService {
 
 
@@ -22,12 +25,14 @@ public class OrderService {
     private final OrderDetailsRepo orderDetailsRepo;
     private final CartRepo cartRepo;
     private final CartService cartService;
+    private final WishListRepo wishListRepo;
 
-    public OrderService(OrdersRepo ordersRepo, OrderDetailsRepo orderDetailsRepo, CartRepo cartRepo, CartService cartService) {
+    public OrderService(OrdersRepo ordersRepo, OrderDetailsRepo orderDetailsRepo, CartRepo cartRepo, CartService cartService, WishListRepo wishListRepo) {
         this.ordersRepo = ordersRepo;
         this.orderDetailsRepo = orderDetailsRepo;
         this.cartRepo = cartRepo;
         this.cartService = cartService;
+        this.wishListRepo = wishListRepo;
     }
 
 
@@ -40,14 +45,28 @@ public class OrderService {
     }
 
 
-    public void addOrderDetails(Long userId) {
+    public void addOrderDetails(String entity, Long userId) {
 
-        userAndItemsRecord userItems = cartRepo.findItemsAndUserByUserId(userId)
-                .map(carts -> new userAndItemsRecord(
-                        carts.getItemsList(),
-                        carts.getUser()
-                ))
-                .orElseThrow(() -> new TargetNotFoundException(targetName, userId));
+        UserAndItemsRecord userItems;
+        if(entity.equals("cart")){
+            userItems = cartRepo.findItemsAndUserByUserId(userId)
+                    .map(wishLists -> new UserAndItemsRecord(
+                            wishLists.getItemsList(),
+                            wishLists.getUser()
+                    ))
+                    .orElseThrow(() -> new TargetNotFoundException(targetName, userId));
+            cartService.clearCartAfterOrder(userId);
+        }else {
+            userItems = wishListRepo.getItemsFromWishListByUserId(userId)
+                    .map(wishLists -> new UserAndItemsRecord(
+                            wishLists.getItemsList(),
+                            wishLists.getUsers()
+                    ))
+                    .orElseThrow(() -> new TargetNotFoundException("User", userId));
+            wishListRepo.clearWishListItemsByWishlistId(userId);
+        }
+
+
 
         Orders order = addOrder(userItems.user());  //// This method save order and return it
         for (Items item : userItems.itemsList()) {
@@ -71,8 +90,9 @@ public class OrderService {
                         orderDetailsRepo.save(od);
                     });
         }
-        cartService.clearCartAfterOrder(userId);
     }
+
+
 
 
     public List<OrderDetailsRecord> getOrderDetails() {
