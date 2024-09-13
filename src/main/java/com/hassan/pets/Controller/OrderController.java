@@ -24,10 +24,10 @@ public class OrderController {
     }
 
 
-    @PostMapping
-    public ResponseEntity<String> addOrderDetails(@RequestBody Users user) {
-        orderService.addOrderDetails(user.getUserId());
-        return new ResponseEntity<>("Items purchased successfully", HttpStatus.NO_CONTENT);
+    @PostMapping("user/{userId}")
+    public ResponseEntity<String> addOrderDetails(@PathVariable Long userId) {
+        orderService.addOrderDetails("cart", userId);
+        return new ResponseEntity<>("Items purchased successfully", HttpStatus.OK);
     }
 
 
