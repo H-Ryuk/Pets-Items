@@ -1,11 +1,8 @@
 package com.hassan.pets.Controller;
 
 import com.hassan.pets.Records.OrderDetailsRecord;
-import com.hassan.pets.Model.Users;
 import com.hassan.pets.Service.OrderService;
-import org.hibernate.query.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

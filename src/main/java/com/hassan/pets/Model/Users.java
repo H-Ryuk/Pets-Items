@@ -52,7 +52,7 @@ public class Users implements Serializable {
 
 
     public enum UserRole {
-        CUSTOMER, ADMIN;
+        ROLE_CUSTOMER, ROLE_ADMIN;
     }
 
 }
