@@ -47,34 +47,26 @@ public class OrderService {
 
     public void addOrderDetails(String entity, Long userId) {
 
-        UserAndItemsRecord userItems;
-        if(entity.equals("cart")){
-            userItems = cartRepo.findItemsAndUserByUserId(userId)
-                    .map(wishLists -> new UserAndItemsRecord(
-                            wishLists.getItemsList(),
-                            wishLists.getUser()
-                    ))
-                    .orElseThrow(() -> new TargetNotFoundException(targetName, userId));
+        UserAndItemsRecord userItems = getUserItemsRecord(entity, userId);
+
+        if (entity.equals("cart")) {
             cartService.clearCartAfterOrder(userId);
-        }else {
-            userItems = wishListRepo.getItemsFromWishListByUserId(userId)
-                    .map(wishLists -> new UserAndItemsRecord(
-                            wishLists.getItemsList(),
-                            wishLists.getUsers()
-                    ))
-                    .orElseThrow(() -> new TargetNotFoundException("User", userId));
+        } else {
             wishListRepo.clearWishListItemsByWishlistId(userId);
         }
-
 
 
         Orders order = addOrder(userItems.user());  //// This method save order and return it
         for (Items item : userItems.itemsList()) {
 
-            if (order.getTotalAmount() != null)
-                order.setTotalAmount(item.getPrice().add(order.getTotalAmount()));
-            else
-                order.setTotalAmount(item.getPrice());
+            BigDecimal itemPrice = item.getPrice();
+            if (itemPrice != null) {
+                if (order.getTotalAmount() != null) {
+                    order.setTotalAmount(order.getTotalAmount().add(itemPrice));
+                } else {
+                    order.setTotalAmount(itemPrice);
+                }
+            }
 
             orderDetailsRepo.checkItemExisting(order.getOrderId(), item.getItemId())
                     .ifPresentOrElse(orderDetails -> {
@@ -91,6 +83,21 @@ public class OrderService {
                     });
         }
     }
+
+
+
+    private UserAndItemsRecord getUserItemsRecord(String entity, Long userId) {
+        if (entity.equals("cart")) {
+            return cartRepo.findItemsAndUserByUserId(userId)
+                    .map(wishLists -> new UserAndItemsRecord(wishLists.getItemsList(), wishLists.getUser()))
+                    .orElseThrow(() -> new TargetNotFoundException("Cart", userId));
+        } else {
+            return wishListRepo.getItemsFromWishListByUserId(userId)
+                    .map(wishLists -> new UserAndItemsRecord(wishLists.getItemsList(), wishLists.getUsers()))
+                    .orElseThrow(() -> new TargetNotFoundException("Wishlist", userId));
+        }
+    }
+
 
 
 
