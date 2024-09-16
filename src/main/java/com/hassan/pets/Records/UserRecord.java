@@ -8,24 +8,26 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
 public record UserRecord
-        (Long userId,
+        (
+                @NotNull(message = "user ID shouldn't be null")
+                Long userId,
 
-         @NotBlank(message = "Username shouldn't be null")
-         String username,
+                @NotBlank(message = "Username shouldn't be null")
+                String username,
 
-         @NotBlank(message = "Password shouldn't be null")
-         String password,
+                @NotBlank(message = "Password shouldn't be null")
+                String password,
 
-         @Email(message = "Invalid email address")
-         String email,
+                @Email(message = "Invalid email address")
+                String email,
 
-         @NotNull(message = "Address shouldn't be null")
-         String address,
+                @NotNull(message = "Address shouldn't be null")
+                String address,
 
-         @Pattern(regexp = "^\\d{10}$", message = "Invalid mobile number entered")
-         String phoneNumber,
+                @Pattern(regexp = "^\\d{10}$", message = "Invalid mobile number entered")
+                String phoneNumber,
 
-         @NotNull(message = "Role shouldn't be null")
-         Users.UserRole role ) {
+                @NotNull(message = "Role shouldn't be null")
+                Users.UserRole role) {
 }
 

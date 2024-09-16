@@ -7,22 +7,24 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public record ItemRecord
-        (Long itemId,
+        (
+                @NotNull(message = "item ID shouldn't be null")
+                Long itemId,
 
-         @NotBlank(message = "item name shouldn't be null")
-         String name,
+                @NotBlank(message = "item name shouldn't be null")
+                String name,
 
-         @NotNull(message = "item price shouldn't be null")
-         BigDecimal price,
+                @NotNull(message = "item price shouldn't be null")
+                BigDecimal price,
 
-         @NotNull(message = "item description shouldn't be null")
-         String description,
+                @NotNull(message = "item description shouldn't be null")
+                String description,
 
-         @NotNull(message = "stock of items shouldn't be null")
-         int stock,
+                @NotNull(message = "stock of items shouldn't be null")
+                int stock,
 
-         byte[] imageUrl,
+                byte[] imageUrl,
 
-         @NotNull(message = "item category shouldn't be null")
-         Categories category) {
+                @NotNull(message = "item category shouldn't be null")
+                Categories category) {
 }
