@@ -1,7 +1,9 @@
 package com.hassan.pets.Advice;
 
 
+import com.hassan.pets.Exception.EmptyCartException;
 import com.hassan.pets.Exception.EmptyFieldException;
+import com.hassan.pets.Exception.EmptyWishListException;
 import com.hassan.pets.Exception.RemovingItemFailedException;
 import com.hassan.pets.Exception.TargetNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -44,11 +46,24 @@ public class GlobalExceptionHandler {
     }
 
 
+
     @ExceptionHandler(RemovingItemFailedException.class)
     public ResponseEntity<String> handleRemovingItemFromCart(RemovingItemFailedException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 
+
+    @ExceptionHandler(EmptyWishListException.class)
+    public ResponseEntity<String> handleEmptyWishListException(EmptyWishListException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
+
+    @ExceptionHandler(EmptyCartException.class)
+    public ResponseEntity<String> handleEmptyCartException(EmptyCartException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
 }
