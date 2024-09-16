@@ -6,6 +6,7 @@ import com.hassan.pets.Records.UserRecord;
 import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Model.Users;
 import com.hassan.pets.Repository.UserRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
+@Transactional
 public class UserService {
 
 
@@ -67,7 +69,9 @@ public class UserService {
     }
 
 
-    public void updateUser(Users user) {
+    public void updateUser(UserRecord userRecord) {
+        Users user = convertUserRecordToUser(userRecord);
+
         userRepo.findById(user.getUserId())
                 .ifPresentOrElse(users -> {
                     users.setAddress(user.getAddress());
@@ -85,17 +89,14 @@ public class UserService {
     }
 
 
-    public String deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
 
-        Optional<Users> user = userRepo.findById(userId);
-        user.ifPresentOrElse(userRepo::delete,
-                () -> {
-                    throw new TargetNotFoundException(targetName, userId);
-                });
-
-        return user.map(users -> "User "+ users.getUsername() + " get successfully deleted")
-                .orElse("User not found and thus could not be deleted");
+        int row = userRepo.deleteUserById(userId);
+        if(row == 0){
+            throw new TargetNotFoundException(targetName, userId);
+        }
     }
+
 
 
     public Users convertUserRecordToUser(UserRecord userRecord) {

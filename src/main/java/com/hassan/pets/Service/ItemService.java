@@ -59,11 +59,10 @@ public class ItemService {
     }
 
 
-    public Page<ItemRecord> getAll(int page ,int size) {
+    public Page<ItemRecord> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return itemRepo.findItemCategoryDetails(pageable);
     }
-
 
 
     public List<ItemRecord> getByName(String name) {
@@ -75,14 +74,10 @@ public class ItemService {
     }
 
 
-
-
     public ItemRecord getById(Long itemId) {
         return itemRepo.findItemCategoryDetails(itemId)
                 .orElseThrow(() -> new TargetNotFoundException(targetName, itemId));
     }
-
-
 
 
     public void deleteItem(Long itemId) {
@@ -94,25 +89,29 @@ public class ItemService {
     }
 
 
-
-
     public ItemRecord updateItem(ItemRecord itemRecord) {
         Items newItem = convertItemRecordToItem(itemRecord);
 
-        categoryRepo.findByName(newItem.getCategory().getName())
-                .ifPresentOrElse(newItem::setCategory,
+        itemRepo.findById(newItem.getItemId())
+                .ifPresentOrElse(items -> {
+                            categoryRepo.findByName(newItem.getCategory().getName())
+                                    .ifPresentOrElse(newItem::setCategory,
+                                            () -> {
+                                                if (itemRecord.category().getName() == null)
+                                                    throw new EmptyFieldException(fieldName);
+                                                else
+                                                    categoryRepo.save(itemRecord.category());
+                                            });
+
+                            itemRepo.save(newItem);
+                        },
                         () -> {
-                            if (itemRecord.category().getName() == null)
-                                throw new EmptyFieldException(fieldName);
-                            else
-                                categoryRepo.save(itemRecord.category());
+                            throw new TargetNotFoundException(targetName, newItem.getItemId());
                         });
 
-        itemRepo.save(newItem);
+
         return itemRecord;
     }
-
-
 
 
     public Items convertItemRecordToItem(ItemRecord itemRecord) {
@@ -126,7 +125,6 @@ public class ItemService {
                 itemRecord.category()
         );
     }
-
 
 
 }

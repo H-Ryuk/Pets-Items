@@ -1,5 +1,7 @@
 package com.hassan.pets.Service;
 
+import com.hassan.pets.Exception.EmptyCartException;
+import com.hassan.pets.Exception.EmptyWishListException;
 import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Records.OrderDetailsRecord;
 import com.hassan.pets.Records.UserAndItemsRecord;
@@ -90,11 +92,11 @@ public class OrderService {
         if (entity.equals("cart")) {
             return cartRepo.findItemsAndUserByUserId(userId)
                     .map(wishLists -> new UserAndItemsRecord(wishLists.getItemsList(), wishLists.getUser()))
-                    .orElseThrow(() -> new TargetNotFoundException("Cart", userId));
+                    .orElseThrow(() -> new EmptyCartException(userId));
         } else {
             return wishListRepo.getItemsFromWishListByUserId(userId)
                     .map(wishLists -> new UserAndItemsRecord(wishLists.getItemsList(), wishLists.getUsers()))
-                    .orElseThrow(() -> new TargetNotFoundException("Wishlist", userId));
+                    .orElseThrow(() -> new EmptyWishListException(userId));
         }
     }
 
