@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -33,7 +34,8 @@ public class SecurityConfig {
     public AuthenticationProvider authProvider(){
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
-        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+//        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
+        provider.setPasswordEncoder(BCrypt.encoder());
         return provider;
     }
 
@@ -43,9 +45,11 @@ public class SecurityConfig {
         return http
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(req -> {
-                    req.requestMatchers("/api/user").hasRole("ADMIN");
-                    req.requestMatchers("/api/item").hasRole("CUSTOMER");
-                    req.requestMatchers("/api/item/category").permitAll();
+//                    req.requestMatchers("/api/user").hasRole("ADMIN");
+//                    req.requestMatchers("/api/item").hasRole("CUSTOMER");
+//                    req.requestMatchers("/api/item/category").permitAll();
+//                    req.anyRequest().permitAll();
+                    req.anyRequest().authenticated();
                 })
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -1,5 +1,6 @@
 package com.hassan.pets.Service;
 
+import com.hassan.pets.Config.BCrypt;
 import com.hassan.pets.Records.OrderRecord;
 import com.hassan.pets.Records.UserOrderRecord;
 import com.hassan.pets.Records.UserRecord;
@@ -7,6 +8,7 @@ import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Model.Users;
 import com.hassan.pets.Repository.UserRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +30,9 @@ public class UserService {
 
 
     public Users addUser(UserRecord userRecord) {
-        return userRepo.save(convertUserRecordToUser(userRecord));
+        Users user = convertUserRecordToUser(userRecord);
+        user.setPassword(BCrypt.encoder().encode(user.getPassword()));
+        return userRepo.save(user);
     }
 
 

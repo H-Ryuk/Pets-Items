@@ -73,6 +73,7 @@ public class OrderService {
             orderDetailsRepo.checkItemExisting(order.getOrderId(), item.getItemId())
                     .ifPresentOrElse(orderDetails -> {
                         orderDetails.setQuantity(orderDetails.getQuantity() + 1);
+                        orderDetails.setPrice(item.getPrice().multiply(BigDecimal.valueOf(orderDetails.getQuantity())));
                         orderDetailsRepo.save(orderDetails);
                     }, () -> {
                         OrderDetails od = new OrderDetails();
