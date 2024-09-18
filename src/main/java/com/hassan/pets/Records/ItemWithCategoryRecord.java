@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record ItemRecord
+public record ItemWithCategoryRecord
         (
                 @NotNull(message = "item ID shouldn't be null")
                 Long itemId,
