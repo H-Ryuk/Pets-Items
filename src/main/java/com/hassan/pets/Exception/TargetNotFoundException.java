@@ -6,8 +6,8 @@ public class TargetNotFoundException extends RuntimeException{
         super(targetName + " with ID: " + targetId + " not found.");
     }
 
-    public TargetNotFoundException(String targetId){
-        super("Item with name : " + targetId + " not found.");
+    public TargetNotFoundException(String itemName){
+        super("Item with name : " + itemName + " not found.");
     }
 
 

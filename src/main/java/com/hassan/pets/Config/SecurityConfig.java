@@ -1,6 +1,7 @@
 package com.hassan.pets.Config;
 
 
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,10 +46,12 @@ public class SecurityConfig {
         return http
                 .csrf(customizer -> customizer.disable())
                 .authorizeHttpRequests(req -> {
-//                    req.requestMatchers("/api/user").hasRole("ADMIN");
-//                    req.requestMatchers("/api/item").hasRole("CUSTOMER");
-//                    req.requestMatchers("/api/item/category").permitAll();
-//                    req.anyRequest().permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/item/**").permitAll();
+                    req.requestMatchers(HttpMethod.GET, "/api/item").permitAll();
+                    req.requestMatchers(HttpMethod.POST, "/api/item").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.PUT, "/api/item").hasRole("ADMIN");
+                    req.requestMatchers(HttpMethod.DELETE, "/api/item").hasRole("ADMIN");
+//                    req.requestMatchers("/api/item").hasAuthority("CUSTOMER");
                     req.anyRequest().authenticated();
                 })
                 .httpBasic(withDefaults())

@@ -1,11 +1,7 @@
 package com.hassan.pets.Advice;
 
 
-import com.hassan.pets.Exception.EmptyCartException;
-import com.hassan.pets.Exception.EmptyFieldException;
-import com.hassan.pets.Exception.EmptyWishListException;
-import com.hassan.pets.Exception.RemovingItemFailedException;
-import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -63,6 +59,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmptyCartException.class)
     public ResponseEntity<String> handleEmptyCartException(EmptyCartException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<String> handleItemNotFoundException(CategoryNotFoundException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
