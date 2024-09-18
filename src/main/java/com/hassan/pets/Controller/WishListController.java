@@ -1,6 +1,6 @@
 package com.hassan.pets.Controller;
 
-import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Records.ItemWithCategoryRecord;
 import com.hassan.pets.Records.UserAndItemsRecord;
 import com.hassan.pets.Service.OrderService;
 import com.hassan.pets.Service.WishListService;
@@ -56,9 +56,9 @@ public class WishListController {
 
 
     @GetMapping("user/{userId}")
-    public ResponseEntity<List<ItemRecord>> getItemsFromWishListByUserId(@PathVariable Long userId){
-        List<ItemRecord> itemRecordList =  wishListService.getItemsFromWishListByUserId(userId);
-        return new ResponseEntity<>(itemRecordList, HttpStatus.OK);
+    public ResponseEntity<List<ItemWithCategoryRecord>> getItemsFromWishListByUserId(@PathVariable Long userId){
+        List<ItemWithCategoryRecord> itemWithCategoryRecordList =  wishListService.getItemsFromWishListByUserId(userId);
+        return new ResponseEntity<>(itemWithCategoryRecordList, HttpStatus.OK);
     }
 
 

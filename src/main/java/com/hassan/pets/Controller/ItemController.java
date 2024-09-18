@@ -1,7 +1,7 @@
 package com.hassan.pets.Controller;
 
-import com.hassan.pets.Records.CategoryRecord;
 import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Records.ItemWithCategoryRecord;
 import com.hassan.pets.Service.CategoryService;
 import com.hassan.pets.Service.ItemService;
 import jakarta.validation.Valid;
@@ -28,8 +28,8 @@ public class ItemController {
 
 
     @PostMapping
-    public ResponseEntity<String> addItem(@RequestBody @Valid ItemRecord itemRecord) {
-        ItemRecord item = itemService.addItem(itemRecord);
+    public ResponseEntity<String> addItem(@RequestBody @Valid ItemWithCategoryRecord itemWithCategoryRecord) {
+        ItemWithCategoryRecord item = itemService.addItem(itemWithCategoryRecord);
         return new
                 ResponseEntity<>("The item " + item.name() + " was created successfully with ID : " + item.itemId(),
                 HttpStatus.CREATED);
@@ -37,7 +37,7 @@ public class ItemController {
 
 
     @GetMapping
-    public List<ItemRecord> getAll() {
+    public List<ItemWithCategoryRecord> getAll() {
         return itemService.getAll();
     }
 
@@ -45,10 +45,10 @@ public class ItemController {
 
     ////// Testing pagination  ///////////////////
     @GetMapping("pagination")
-    public ResponseEntity<Page<ItemRecord>> getAll(
+    public ResponseEntity<Page<ItemWithCategoryRecord>> getAll(
             @RequestParam int page,
             @RequestParam int size) {
-        Page<ItemRecord> items = itemService.getAll(page, size);
+        Page<ItemWithCategoryRecord> items = itemService.getAll(page, size);
         return new ResponseEntity<>(items, HttpStatus.OK);
     }
     ///////////////////////////////////////////////
@@ -58,17 +58,25 @@ public class ItemController {
 
     @GetMapping("{itemId}")
     public ResponseEntity<?> getById(@PathVariable Long itemId) {
-        ItemRecord itemsRecord = itemService.getById(itemId);
+        ItemWithCategoryRecord itemsRecord = itemService.getById(itemId);
         return new ResponseEntity<>(itemsRecord, HttpStatus.OK);
 
     }
 
 
     @GetMapping("name/{itemName}")
-    public ResponseEntity<List<ItemRecord>> getByName(@PathVariable String itemName) {
-        List<ItemRecord> listItem = itemService.getByName(itemName);
+    public ResponseEntity<List<ItemWithCategoryRecord>> getByName(@PathVariable String itemName) {
+        List<ItemWithCategoryRecord> listItem = itemService.getByName(itemName);
         return new ResponseEntity<>(listItem, HttpStatus.OK);
     }
+
+
+    @GetMapping("category/{categoryName}")
+    public ResponseEntity<List<ItemRecord>> getItemsByCategoryName(@PathVariable String categoryName){
+        List<ItemRecord> itemRecordList = categoryService.getItemsByCategoryName(categoryName);
+        return new ResponseEntity<>(itemRecordList, HttpStatus.OK);
+    }
+
 
 
     @DeleteMapping("{itemId}")
@@ -79,29 +87,13 @@ public class ItemController {
 
 
     @PutMapping
-    public ResponseEntity<ItemRecord> updateItem(@RequestBody @Valid ItemRecord itemRecord) {
-        ItemRecord item = itemService.updateItem(itemRecord);
+    public ResponseEntity<ItemWithCategoryRecord> updateItem(@RequestBody @Valid ItemWithCategoryRecord itemWithCategoryRecord) {
+        ItemWithCategoryRecord item = itemService.updateItem(itemWithCategoryRecord);
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
 
 
-
-    /////////////// Categories methods ////////////////
-
-    @GetMapping("category")
-    public List<CategoryRecord> getAllCategories() {
-        return categoryService.getAllCategories();
-    }
-
-
-    @PutMapping("category/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId, @RequestBody @Valid CategoryRecord categoryRecord) {
-        categoryService.updateCategory(categoryId, categoryRecord);
-        return new
-                ResponseEntity<>("Category with ID: " + categoryId + " get successfully updated",
-                HttpStatus.OK);
-    }
 
 
 }
