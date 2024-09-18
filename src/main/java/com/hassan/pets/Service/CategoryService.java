@@ -1,8 +1,10 @@
 package com.hassan.pets.Service;
 
+import com.hassan.pets.Exception.CategoryNotFoundException;
 import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Records.CategoryRecord;
 import com.hassan.pets.Model.Categories;
+import com.hassan.pets.Records.ItemRecord;
 import com.hassan.pets.Repository.CategoryRepo;
 import org.springframework.stereotype.Service;
 
@@ -48,4 +50,16 @@ public class CategoryService {
     }
 
 
+    public List<ItemRecord> getItemsByCategoryName(String categoryName) {
+        List<ItemRecord> itemRecordList = categoryRepo.getItemsByCategoryName(categoryName);
+        if (itemRecordList.isEmpty())
+            throw new CategoryNotFoundException(categoryName);
+        return itemRecordList;
+    }
+
+
+    public CategoryRecord getCategroyByName(String categoryName) {
+        return categoryRepo.getCategroyByName(categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+    }
 }

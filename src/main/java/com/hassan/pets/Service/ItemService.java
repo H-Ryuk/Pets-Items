@@ -1,7 +1,7 @@
 package com.hassan.pets.Service;
 
 import com.hassan.pets.Exception.EmptyFieldException;
-import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Records.ItemWithCategoryRecord;
 import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Model.Items;
 import com.hassan.pets.Repository.CategoryRepo;
@@ -9,7 +9,6 @@ import com.hassan.pets.Repository.ItemRepo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,8 +31,8 @@ public class ItemService {
     }
 
 
-    public ItemRecord addItem(ItemRecord itemRecord) {
-        Items item = convertItemRecordToItem(itemRecord);
+    public ItemWithCategoryRecord addItem(ItemWithCategoryRecord itemWithCategoryRecord) {
+        Items item = convertItemRecordToItem(itemWithCategoryRecord);
 
         categoryRepo.findByName(item.getCategory().getName())
                 .ifPresentOrElse(
@@ -42,7 +41,7 @@ public class ItemService {
                 );
 
         return Optional.of(itemRepo.save(item))
-                .map(itemOptional -> new ItemRecord(
+                .map(itemOptional -> new ItemWithCategoryRecord(
                         itemOptional.getItemId(),
                         itemOptional.getName(),
                         itemOptional.getPrice(),
@@ -54,27 +53,27 @@ public class ItemService {
     }
 
 
-    public List<ItemRecord> getAll() {
+    public List<ItemWithCategoryRecord> getAll() {
         return itemRepo.findItemCategoryDetails();
     }
 
 
-    public Page<ItemRecord> getAll(int page, int size) {
+    public Page<ItemWithCategoryRecord> getAll(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return itemRepo.findItemCategoryDetails(pageable);
     }
 
 
-    public List<ItemRecord> getByName(String name) {
-        List<ItemRecord> itemRecordList = itemRepo.findItemCategoryDetails(name);
-        if (itemRecordList.isEmpty()) {
+    public List<ItemWithCategoryRecord> getByName(String name) {
+        List<ItemWithCategoryRecord> itemWithCategoryRecordList = itemRepo.findItemCategoryDetails(name);
+        if (itemWithCategoryRecordList.isEmpty()) {
             throw new TargetNotFoundException(name);
         }
-        return itemRecordList;
+        return itemWithCategoryRecordList;
     }
 
 
-    public ItemRecord getById(Long itemId) {
+    public ItemWithCategoryRecord getById(Long itemId) {
         return itemRepo.findItemCategoryDetails(itemId)
                 .orElseThrow(() -> new TargetNotFoundException(targetName, itemId));
     }
@@ -89,18 +88,18 @@ public class ItemService {
     }
 
 
-    public ItemRecord updateItem(ItemRecord itemRecord) {
-        Items newItem = convertItemRecordToItem(itemRecord);
+    public ItemWithCategoryRecord updateItem(ItemWithCategoryRecord itemWithCategoryRecord) {
+        Items newItem = convertItemRecordToItem(itemWithCategoryRecord);
 
         itemRepo.findById(newItem.getItemId())
                 .ifPresentOrElse(items -> {
                             categoryRepo.findByName(newItem.getCategory().getName())
                                     .ifPresentOrElse(newItem::setCategory,
                                             () -> {
-                                                if (itemRecord.category().getName() == null)
+                                                if (itemWithCategoryRecord.category().getName() == null)
                                                     throw new EmptyFieldException(fieldName);
                                                 else
-                                                    categoryRepo.save(itemRecord.category());
+                                                    categoryRepo.save(itemWithCategoryRecord.category());
                                             });
 
                             itemRepo.save(newItem);
@@ -110,19 +109,19 @@ public class ItemService {
                         });
 
 
-        return itemRecord;
+        return itemWithCategoryRecord;
     }
 
 
-    public Items convertItemRecordToItem(ItemRecord itemRecord) {
+    public Items convertItemRecordToItem(ItemWithCategoryRecord itemWithCategoryRecord) {
         return new Items(
-                itemRecord.itemId(),
-                itemRecord.name(),
-                itemRecord.description(),
-                itemRecord.price(),
-                itemRecord.stock(),
-                itemRecord.imageUrl(),
-                itemRecord.category()
+                itemWithCategoryRecord.itemId(),
+                itemWithCategoryRecord.name(),
+                itemWithCategoryRecord.description(),
+                itemWithCategoryRecord.price(),
+                itemWithCategoryRecord.stock(),
+                itemWithCategoryRecord.imageUrl(),
+                itemWithCategoryRecord.category()
         );
     }
 

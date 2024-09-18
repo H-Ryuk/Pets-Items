@@ -2,8 +2,7 @@ package com.hassan.pets.Service;
 
 import com.hassan.pets.Exception.EmptyWishListException;
 import com.hassan.pets.Exception.RemovingItemFailedException;
-import com.hassan.pets.Exception.TargetNotFoundException;
-import com.hassan.pets.Records.ItemRecord;
+import com.hassan.pets.Records.ItemWithCategoryRecord;
 import com.hassan.pets.Records.UserAndItemsRecord;
 import com.hassan.pets.Model.WishLists;
 import com.hassan.pets.Repository.WishListRepo;
@@ -50,12 +49,12 @@ public class WishListService {
     }
 
 
-    public List<ItemRecord> getItemsFromWishListByUserId(Long userId) {
+    public List<ItemWithCategoryRecord> getItemsFromWishListByUserId(Long userId) {
         return wishListRepo.getItemsFromWishListByUserId(userId)
                 .orElseThrow(() -> new EmptyWishListException(userId))
                 .getItemsList()
                 .stream()
-                .map(w -> new ItemRecord(
+                .map(w -> new ItemWithCategoryRecord(
                         w.getItemId(),
                         w.getName(),
                         w.getPrice(),
