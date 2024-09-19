@@ -56,6 +56,7 @@ public class SecurityConfig {
                 })
                 .httpBasic(withDefaults())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authenticationProvider(authProvider())
                 .build();
     }
 
