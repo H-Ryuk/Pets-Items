@@ -1,6 +1,6 @@
 package com.hassan.pets.Config;
 
-import com.hassan.pets.Exception.TargetNotFoundException;
+import com.hassan.pets.Exception.LogInFailedException;
 import com.hassan.pets.Repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,11 +21,9 @@ public class CostomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        log.info("this is the user name : " + username);
-
         return userRepo.findByEmail(username)
                 .map(CustomUserDetails::new)
-                .orElseThrow(() -> new TargetNotFoundException("User", 3L));
+                .orElseThrow(() -> new LogInFailedException(username));
     }
 
 

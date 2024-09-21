@@ -68,4 +68,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler(LogInFailedException.class)
+    public ResponseEntity<String> handleFailedLogIn(LogInFailedException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+
 }
