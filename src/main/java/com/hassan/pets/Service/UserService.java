@@ -8,7 +8,6 @@ import com.hassan.pets.Exception.TargetNotFoundException;
 import com.hassan.pets.Model.Users;
 import com.hassan.pets.Repository.UserRepo;
 import jakarta.transaction.Transactional;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -71,6 +70,7 @@ public class UserService {
                 })
                 .orElseThrow(() -> new TargetNotFoundException(targetName, userId));
     }
+
 
 
     public void updateUser(UserRecord userRecord) {
