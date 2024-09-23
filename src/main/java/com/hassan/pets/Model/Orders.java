@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 
@@ -31,8 +32,8 @@ public class Orders implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd 'T' HH:mm")
-    private LocalDateTime orderDate;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate orderDate;
 
     private BigDecimal totalAmount;
 
@@ -42,7 +43,7 @@ public class Orders implements Serializable {
 
     @PrePersist
     public void onCreate() {
-        this.orderDate = LocalDateTime.now();
+        this.orderDate = LocalDate.now();
     }
 
 
@@ -51,7 +52,7 @@ public class Orders implements Serializable {
     private Users users;
 
 
-    public Orders(Long orderId, LocalDateTime orderDate, BigDecimal totalAmount, OrderStatus status, Users users) {
+    public Orders(Long orderId, LocalDate orderDate, BigDecimal totalAmount, OrderStatus status, Users users) {
         this.orderId = orderId;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
