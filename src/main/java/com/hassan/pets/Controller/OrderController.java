@@ -41,5 +41,10 @@ public class OrderController {
     }
 
 
+    @PatchMapping("{orderId}")
+    public void cancelOrder(@PathVariable Long orderId){
+        orderService.cacelOrder(orderId);
+    }
+
 
 }
