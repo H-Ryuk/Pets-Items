@@ -22,10 +22,13 @@ public class SecurityConfig {
 
 
     private final UserDetailsService userDetailsService;
+    private final BCrypt bCrypt;
 
 
-    public SecurityConfig(UserDetailsService userDetailsService) {
+
+    public SecurityConfig(UserDetailsService userDetailsService, BCrypt bCrypt) {
         this.userDetailsService = userDetailsService;
+        this.bCrypt = bCrypt;
     }
 
 
@@ -36,7 +39,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(userDetailsService);
 //        provider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
-        provider.setPasswordEncoder(BCrypt.encoder());
+        provider.setPasswordEncoder(bCrypt.encoder());
         return provider;
     }
 

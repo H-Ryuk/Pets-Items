@@ -9,7 +9,7 @@ public class BCrypt {
 
 
     @Bean
-    public static BCryptPasswordEncoder encoder(){
+    public BCryptPasswordEncoder encoder(){
         return new BCryptPasswordEncoder(12);
     }
 }
