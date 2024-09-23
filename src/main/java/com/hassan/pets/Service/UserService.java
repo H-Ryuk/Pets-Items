@@ -21,16 +21,18 @@ public class UserService {
 
     private final String targetName = "User";
     private final UserRepo userRepo;
+    private final BCrypt bCrypt;
 
 
-    public UserService(UserRepo userRepo) {
+    public UserService(UserRepo userRepo, BCrypt bCrypt) {
         this.userRepo = userRepo;
+        this.bCrypt = bCrypt;
     }
 
 
     public Users addUser(UserRecord userRecord) {
         Users user = convertUserRecordToUser(userRecord);
-        user.setPassword(BCrypt.encoder().encode(user.getPassword()));
+        user.setPassword(bCrypt.encoder().encode(user.getPassword()));
         return userRepo.save(user);
     }
 

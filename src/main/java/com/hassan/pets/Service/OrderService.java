@@ -29,6 +29,8 @@ public class OrderService {
     private final CartService cartService;
     private final WishListRepo wishListRepo;
 
+
+
     public OrderService(OrdersRepo ordersRepo, OrderDetailsRepo orderDetailsRepo, CartRepo cartRepo, CartService cartService, WishListRepo wishListRepo) {
         this.ordersRepo = ordersRepo;
         this.orderDetailsRepo = orderDetailsRepo;
@@ -38,6 +40,7 @@ public class OrderService {
     }
 
 
+
     public Orders addOrder(Users user) {
         Orders newOrder = new Orders();
         newOrder.setStatus(Orders.OrderStatus.PENDING);
@@ -45,6 +48,7 @@ public class OrderService {
         newOrder.setUsers(user);
         return ordersRepo.save(newOrder);
     }
+
 
 
     public void addOrderDetails(String entity, Long userId) {
@@ -89,6 +93,7 @@ public class OrderService {
 
 
 
+
     private UserAndItemsRecord getUserItemsRecord(String entity, Long userId) {
         if (entity.equals("cart")) {
             return cartRepo.findItemsAndUserByUserId(userId)
@@ -119,6 +124,7 @@ public class OrderService {
     }
 
 
+
     public List<OrderDetailsRecord> getOrderDetailsByOrderId(Long orderId) {
         return ordersRepo.findById(orderId)
                 .map(orderDetailsRepo::getOrderDetailsByOrderId)
@@ -134,6 +140,14 @@ public class OrderService {
                         o.getItem().getCategory().getName()
                 )).toList();
     }
+
+
+
+
+    public void cacelOrder(Long orderId) {
+        ordersRepo.cancelOrder(orderId);
+    }
+
 
 
 }
