@@ -100,8 +100,8 @@ You can use the Postman for testing the API.
 > * ``DELETE /api/v1/item/{itemId}:`` Delete item by ID (Admin only).
 
 ### Security
-> * JWT Authentication: Users need to register and login to get a JWT token.
-    Role-based access control: Administrator can create, update and delete items, while regular users (customer) can purchase items or add them to wish list.
+JWT Authentication: Users need to register and login to get a JWT token.
+Role-based access control: Administrator can create, update and delete items, while regular users (customer) can purchase items or add them to wish list.
 ## Contribution
 Feel free to submit pull requests and contribute to this project.Please ensure your code follows the project's coding standards.
 
