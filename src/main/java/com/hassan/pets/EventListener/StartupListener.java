@@ -25,6 +25,7 @@ public class StartupListener {
 
 
 
+    // Confirm purchase if order date is greater than 1 week
     @EventListener(ApplicationReadyEvent.class)
     public void changeOrderStatus(){
         List<DateStatusOrderRecord> recordList = ordersRepo.getOrderDate();
@@ -33,12 +34,10 @@ public class StartupListener {
             if (r.orderDate().plusWeeks(1).isBefore(LocalDate.now()) &&
                     r.status().equals(Orders.OrderStatus.PENDING)){
 
-
                 ordersRepo.changeOrderStatus(r.orderId());
             }
         }
     }
-
 
 
 }

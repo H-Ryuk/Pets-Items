@@ -42,7 +42,7 @@ public class Orders implements Serializable {
 
 
     @PrePersist
-    public void onCreate() {
+    private void onCreate() {
         this.orderDate = LocalDate.now();
     }
 

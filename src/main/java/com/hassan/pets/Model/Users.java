@@ -40,8 +40,7 @@ public class Users implements Serializable {
     private List<Orders> ordersList = new ArrayList<>();
 
 
-    public Users(Long userId, String username, String password, String email, String address, String phoneNumber, UserRole role) {
-        this.userId = userId;
+    public Users(String username, String password, String email, String address, String phoneNumber, UserRole role) {
         this.username = username;
         this.password = password;
         this.email = email;

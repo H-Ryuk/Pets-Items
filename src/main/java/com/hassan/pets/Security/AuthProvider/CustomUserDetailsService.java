@@ -1,4 +1,4 @@
-package com.hassan.pets.Config;
+package com.hassan.pets.Security.AuthProvider;
 
 import com.hassan.pets.Exception.LogInFailedException;
 import com.hassan.pets.Repository.UserRepo;
@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class CostomUserDetailsService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepo userRepo;
 
-    public CostomUserDetailsService(UserRepo userRepo) {
+    public CustomUserDetailsService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
 

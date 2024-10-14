@@ -9,9 +9,6 @@ import jakarta.validation.constraints.Pattern;
 
 public record UserRecord
         (
-                @NotNull(message = "user ID shouldn't be null")
-                Long userId,
-
                 @NotBlank(message = "Username shouldn't be null")
                 String username,
 
@@ -19,6 +16,7 @@ public record UserRecord
                 String password,
 
                 @Email(message = "Invalid email address")
+                @NotNull(message = "Email address should not be null")
                 String email,
 
                 @NotNull(message = "Address shouldn't be null")

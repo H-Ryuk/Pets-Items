@@ -1,7 +1,6 @@
 package com.hassan.pets.Controller;
 
 import com.hassan.pets.Records.CategoryRecord;
-import com.hassan.pets.Repository.CategoryRepo;
 import com.hassan.pets.Service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/category")
+@RequestMapping("api/v1/category")
 public class CategoryController {
 
 

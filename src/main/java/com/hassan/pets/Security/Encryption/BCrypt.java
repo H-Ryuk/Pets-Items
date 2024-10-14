@@ -1,4 +1,4 @@
-package com.hassan.pets.Config;
+package com.hassan.pets.Security.Encryption;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

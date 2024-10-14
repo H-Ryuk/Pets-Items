@@ -1,4 +1,4 @@
-package com.hassan.pets.Config;
+package com.hassan.pets.Security.AuthProvider;
 
 import com.hassan.pets.Model.Users;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,6 +30,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 }

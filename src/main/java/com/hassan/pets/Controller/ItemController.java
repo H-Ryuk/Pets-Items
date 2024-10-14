@@ -5,6 +5,7 @@ import com.hassan.pets.Records.ItemWithCategoryRecord;
 import com.hassan.pets.Service.CategoryService;
 import com.hassan.pets.Service.ItemService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,19 +13,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@AllArgsConstructor
 @RestController
-@RequestMapping("api/item")
+@RequestMapping("api/v1/item")
 public class ItemController {
 
 
     private final ItemService itemService;
     private final CategoryService categoryService;
 
-
-    public ItemController(ItemService itemService, CategoryService categoryService) {
-        this.itemService = itemService;
-        this.categoryService = categoryService;
-    }
 
 
     @PostMapping
